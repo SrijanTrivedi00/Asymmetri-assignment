@@ -22,13 +22,23 @@ export default function SignInButtons() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <button
-        className="w-48 px-4 py-2 bg-gray-900 text-white rounded shadow hover:bg-gray-800"
-        onClick={() => signIn("github", { callbackUrl: "/home" })}
-      >
-        Sign in with GitHub
-      </button>
-      <p className="text-sm text-gray-500">No password required — uses GitHub OAuth</p>
+      <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
+        <button
+          className="w-48 px-4 py-2 bg-gray-900 text-white rounded shadow hover:bg-gray-800"
+          onClick={() => signIn("github", { callbackUrl: "/home" })}
+        >
+          Sign in with GitHub
+        </button>
+
+        <button
+          className="w-48 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+          onClick={() => signIn("google", { callbackUrl: "/home" })}
+        >
+          Sign in with Google
+        </button>
+      </div>
+
+      <p className="text-sm text-gray-500">No password required — choose an OAuth provider</p>
     </div>
   );
 }

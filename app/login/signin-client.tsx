@@ -3,28 +3,32 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-
 export default function SignInButtons() {
   const { data: session } = useSession();
-  const Router=useRouter();
+  const Router = useRouter();
 
   if (session) {
     return (
       <div className="flex flex-col items-center gap-4">
-        <p className="text-gray-700">Signed in as <span className="font-medium">{session.user?.email ?? session.user?.name}</span></p>
-       <div className="flex gap-2">
-        <button
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-          onClick={() => signOut({ callbackUrl: "/login" })}
-        >
-          Sign out
-        </button>
-        <button
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-red-600"
-          onClick={() => Router.push("/home")}
-        >
-          Go To Home
-        </button>
+        <p className="text-gray-700">
+          Signed in as{" "}
+          <span className="font-medium">
+            {session.user?.email ?? session.user?.name}
+          </span>
+        </p>
+        <div className="flex gap-2">
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+          >
+            Sign out
+          </button>
+          <button
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-red-600"
+            onClick={() => Router.push("/home")}
+          >
+            Go To Home
+          </button>
         </div>
       </div>
     );
@@ -48,7 +52,9 @@ export default function SignInButtons() {
         </button>
       </div>
 
-      <p className="text-sm text-gray-500">No password required — choose an OAuth provider</p>
+      <p className="text-sm text-gray-500">
+        No password required — choose an OAuth provider
+      </p>
     </div>
   );
 }

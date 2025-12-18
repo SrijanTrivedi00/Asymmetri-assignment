@@ -1,17 +1,33 @@
 import SignInButtons from "./signin-client";
 
-
 export const metadata = {
   title: "Login",
 };
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50">
-      <section className="w-full max-w-md bg-white rounded-lg shadow p-8">
-        <h1 className="text-2xl font-semibold mb-2">Welcome back</h1>
-        <p className="text-sm text-gray-500 mb-6">Sign in with your GitHub account to continue.</p>
+    <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-indigo-100">
+      <section className="w-full max-w-md rounded-2xl bg-white/80 backdrop-blur shadow-xl border border-gray-100 p-8">
+        <div className="mb-6 text-center">
+          <h1 className="text-3xl font-bold text-gray-900">Welcome Back 👋</h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Sign in to continue to chat!
+          </p>
+        </div>
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-3 text-gray-400">Secure Login</span>
+          </div>
+        </div>
         <SignInButtons />
+        <p className="mt-6 text-center text-xs text-gray-500">
+          By continuing, you agree to our{" "}
+          <span className="font-medium text-gray-700">Terms</span> &{" "}
+          <span className="font-medium text-gray-700">Privacy Policy</span>
+        </p>
       </section>
     </main>
   );

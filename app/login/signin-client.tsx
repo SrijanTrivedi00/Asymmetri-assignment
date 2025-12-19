@@ -36,7 +36,7 @@ export default function SignInButtons() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
+      <div className="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
         <button
           className="w-48 px-4 py-2 bg-gray-900 text-white rounded shadow hover:bg-gray-800 cursor-pointer"
           onClick={() => signIn("github", { callbackUrl: "/home" })}

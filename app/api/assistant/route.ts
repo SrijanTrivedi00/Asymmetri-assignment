@@ -25,15 +25,19 @@ export async function POST(req: Request) {
 
     let assistantText = "I'm here to help. Ask me about weather, F1 races, or stock prices.";
     const qLower = query.toLowerCase();
-    if (/\b(weather|temperature|forecast)\b/.test(qLower)) {
-      const m = query.match(/in ([a-zA-Z ,]+)/i);
+
+    // More robust intent detection: allow variants like "formula1", "formula-1", "grand-prix"
+    if (/\b(?:weather|temperature|forecast|climate|rain|snow|sunny|cloudy)\b/.test(qLower)) {
+      const m = query.match(/in\s+([a-zA-Z \-,']+)/i);
       const location = m ? m[1].trim() : "London";
       assistantText = await getWeather(location);
-    } else if (/\b(f1|formula 1|race|grand prix)\b/.test(qLower)) {
+    } else if (/\b(?:f1|formula\s*-?\s*1|formula1|grand\s*-?\s*prix|grandprix|race|races)\b/.test(qLower)) {
       assistantText = await getF1Matches();
-    } else if (/\b(stock|price|quote)\b/.test(qLower)) {
-      const m = query.match(/([A-Za-z]{1,5})\b/);
-      const symbol = m ? m[1].toUpperCase() : "AAPL";
+    } else if (/\b(?:stock|price|quote|ticker)\b/.test(qLower)) {
+      // Prefer explicit symbol following keywords like "stock AAPL" else fallback to first 1-5 letter token
+      const mExplicit = query.match(/(?:stock|quote|ticker|price)\s+([A-Za-z]{1,5})\b/i);
+      const mFallback = query.match(/\b([A-Za-z]{1,5})\b/);
+      const symbol = (mExplicit?.[1] || mFallback?.[1] || "AAPL").toUpperCase();
       assistantText = await getStockPrice(symbol);
     } else {
       assistantText = `You asked: "${query}" — I can call tools for weather, F1, or stock prices. Try "weather in Paris", "next f1 race", or "stock AAPL".`;

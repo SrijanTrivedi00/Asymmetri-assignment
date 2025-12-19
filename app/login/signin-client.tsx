@@ -18,13 +18,13 @@ export default function SignInButtons() {
         </p>
         <div className="flex gap-2">
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
             onClick={() => signOut({ callbackUrl: "/login" })}
           >
             Sign out
           </button>
           <button
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-red-600"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-400 cursor-pointer"
             onClick={() => Router.push("/home")}
           >
             Go To Home
@@ -38,14 +38,14 @@ export default function SignInButtons() {
     <div className="flex flex-col items-center gap-4">
       <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
         <button
-          className="w-48 px-4 py-2 bg-gray-900 text-white rounded shadow hover:bg-gray-800"
+          className="w-48 px-4 py-2 bg-gray-900 text-white rounded shadow hover:bg-gray-800 cursor-pointer"
           onClick={() => signIn("github", { callbackUrl: "/home" })}
         >
           Sign in with GitHub
         </button>
 
         <button
-          className="w-48 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+          className="w-48 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 cursor-pointer"
           onClick={() => signIn("google", { callbackUrl: "/home" })}
         >
           Sign in with Google

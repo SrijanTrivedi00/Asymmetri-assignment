@@ -51,7 +51,7 @@ export default function ChatForm() {
       <button
         type="submit"
         disabled={loading}
-        className="px-4 py-2 bg-gray-900 text-white rounded"
+        className="px-4 py-2 bg-gray-900 text-white rounded cursor-pointer"
       >
         {loading ? "Sending..." : "Send"}
       </button>

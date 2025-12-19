@@ -1,50 +1,108 @@
 import axios from "axios";
 
-export async function getWeather(location: string) {
-  const key = process.env.OPENWEATHER_API_KEY;
-  if (!key) return `OpenWeatherMap API key not configured (OPENWEATHER_API_KEY).`;
-
+export async function getWeather(city: string) {
   try {
-    const q = encodeURIComponent(location);
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${q}&units=metric&appid=${key}`;
+    const q = encodeURIComponent(city);
+    const url = `https://wttr.in/${q}?format=j1`;
+
     const res = await axios.get(url);
     const data = res.data;
-    const description = data.weather?.[0]?.description ?? "unknown";
-    const temp = data.main?.temp;
-    return `Weather in ${data.name}: ${description}, ${temp}°C`;
+    const current = data.current_condition?.[0];
+    if (!current) {
+      return `Weather data for ${city} is unavailable.`;
+    }
+
+    const description = current.weatherDesc?.[0]?.value ?? "unknown";
+    const temp = current.temp_C ?? "N/A";
+
+    return `Weather in ${city}: ${description}, ${temp}°C`;
   } catch (err: any) {
-    return `Could not fetch weather for ${location}: ${err?.message ?? err}`;
+    return `Error fetching weather for ${city}: ${err?.message ?? err}`;
   }
 }
 
+//USING PERPLEXITY API FOR F1 AND STOCK PRICE REALTIME DATA
+
 export async function getF1Matches() {
   try {
-    const url = `https://ergast.com/api/f1/current/next.json`;
-    const res = await axios.get(url);
-    const race = res.data?.MRData?.RaceTable?.Races?.[0];
-    if (!race) return `No upcoming F1 race found.`;
-    const name = race.raceName;
-    const circuit = race.Circuit?.circuitName;
-    const date = race.date;
-    const time = race.time ?? "";
-    return `Next F1 race: ${name} at ${circuit} on ${date} ${time}`;
+    const response = await axios.post(
+      "https://api.perplexity.ai/chat/completions",
+      {
+        model: "sonar-pro",
+        messages: [
+          {
+            role: "user",
+            content:
+              "Next upcoming F1 race after current date with date, location, circuit",
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const contentPP = response.data.choices[0].message.content;
+    const content = contentPP
+      // Remove ANY citation-like square bracket content
+      // [1], [12], [1][3][5], [web:1], [image:3], etc.
+      .replace(/\[[^\]]*\]/g, "")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
+    return content || "No upcoming F1 race found.";
   } catch (err: any) {
-    return `Could not fetch F1 race info: ${err?.message ?? err}`;
+    return `Error: Could not fetch F1 race info: ${err.message}`;
   }
 }
 
 export async function getStockPrice(symbol: string) {
-  const key = process.env.ALPHA_VANTAGE_API_KEY;
-  if (!key) return `Alpha Vantage API key not configured (ALPHA_VANTAGE_API_KEY).`;
+  const key = process.env.PERPLEXITY_API_KEY;
+  if (!key) return `Perplexity API key not configured (PERPLEXITY_API_KEY).`;
 
   try {
-    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(symbol)}&apikey=${key}`;
-    const res = await axios.get(url);
-    const data = res.data?.["Global Quote"];
-    if (!data) return `No data for symbol ${symbol}.`;
-    const price = data["05. price"];
-    return `Price for ${symbol.toUpperCase()}: $${price}`;
+    const response = await axios.post(
+      "https://api.perplexity.ai/chat/completions",
+      {
+        model: "sonar-pro",
+        messages: [
+          {
+            role: "user",
+            content: `Current stock price for ${symbol.toUpperCase()} with latest quote and change.`,
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const contentPP = response.data.choices[0].message.content;
+    const content = contentPP
+      // Remove ANY citation-like square bracket content
+      // [1], [12], [1][3][5], [web:1], [image:3], etc.
+      .replace(/\[[^\]]*\]/g, "")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
+    if (!content || content.includes("no data")) {
+      return `No data for symbol ${symbol.toUpperCase()}.`;
+    }
+
+    return content;
   } catch (err: any) {
-    return `Could not fetch stock price for ${symbol}: ${err?.message ?? err}`;
+    return `Error: Could not fetch stock price for ${symbol}: ${
+      err?.message ?? err
+    }`;
   }
 }

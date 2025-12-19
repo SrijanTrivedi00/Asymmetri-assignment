@@ -42,3 +42,16 @@ Files to know:
 - `app/api/` — server API routes (e.g., assistant, auth)
 - `lib/supabaseServer.ts` — Supabase server client
 - `lib/auth.ts` — NextAuth provider configuration
+
+.env Contents:
+
+NEXTAUTH_SECRET=
+GITHUB_ID=
+GITHUB_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+ALPHA_VANTAGE_API_KEY=
+PERPLEXITY_API_KEY=
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
